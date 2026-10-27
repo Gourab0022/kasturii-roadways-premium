@@ -1,0 +1,2 @@
+import {env} from 'cloudflare:workers';import {cookies} from 'next/headers';import {sameOrigin,json,COOKIE} from '../../../admin/auth';import {digest} from '../../../admin/crypto';
+export async function POST(r:Request){if(!sameOrigin(r))return json({error:'Request not allowed.'},403);const token=(await cookies()).get(COOKIE)?.value;if(token)await env.DB!.prepare('DELETE FROM admin_sessions WHERE token=?').bind(await digest(token)).run();return json({ok:true},200,{'Set-Cookie':`${COOKIE}=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0`});}
