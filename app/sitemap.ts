@@ -1,0 +1,1 @@
+export default function sitemap(){return [{url:'https://kasturii-roadways-premium.rare-snow-5006.chatgpt.site',lastModified:new Date()}]}

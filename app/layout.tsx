@@ -1,0 +1,3 @@
+import type {Metadata} from 'next';import './globals.css';
+export const metadata:Metadata={metadataBase:new URL('https://kasturii-roadways-premium.rare-snow-5006.chatgpt.site'),title:'Kasturii Roadways | Premium Night Coach Travel in Odisha',description:'Ride in Comfort, Travel in Pride. Discover Kasturii Roadways, premium overnight travel in Odisha. Explore coaches, routes and confirmed booking options.',alternates:{canonical:'/'},openGraph:{title:'Kasturii Roadways — Travel Beyond Ordinary',description:'A new chapter in overnight travel in Odisha.',images:['/hero.webp']}};
+export default function Layout({children}:{children:React.ReactNode}){return <html lang="en"><body>{children}</body></html>}
