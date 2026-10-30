@@ -1,5 +1,5 @@
 # Dependencies
-/node_modules/
+**/node_modules/
 /.pnp
 .pnp.*
 # Keep authored Yarn tooling if the project adopts Yarn.
@@ -15,6 +15,7 @@
 /.vinext/
 /out/
 next-env.d.ts
+**/next-env.d.ts
 *.tsbuildinfo
 
 # Test output
@@ -29,6 +30,8 @@ yarn-error.log*
 # Local environment and keys
 .env*
 .dev.vars*
+!**/.env.example
+!**/.dev.vars.example
 *.pem
 
 # Checkout-local tool state
@@ -40,6 +43,10 @@ yarn-error.log*
 /.codex/
 /outputs/
 /work/
+/apps/web/.next/
+/apps/cms/.wrangler/
+/apps/cms/public/uploads/*
+!/apps/cms/public/uploads/.gitkeep
 
 # OS metadata
 .DS_Store

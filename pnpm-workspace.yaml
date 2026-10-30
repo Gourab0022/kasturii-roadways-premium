@@ -17,5 +17,7 @@ packageImportMethod: auto
 # The explicit installer owns dependency setup, including restored workspaces.
 verifyDepsBeforeRun: false
 optimisticRepeatInstall: false
+packages:
+  - apps/*
 overrides:
   miniflare>sharp: 0.35.4

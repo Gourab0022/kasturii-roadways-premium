@@ -1,0 +1,16 @@
+{
+  "name": "@kasturii/cms",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "db:generate": "drizzle-kit generate --config drizzle.config.ts"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20260515.1",
+    "drizzle-kit": "0.31.10",
+    "drizzle-orm": "0.45.2",
+    "typescript": "5.9.3",
+    "wrangler": "4.92.0"
+  }
+}
