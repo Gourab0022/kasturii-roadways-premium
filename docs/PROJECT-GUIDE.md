@@ -134,6 +134,8 @@ Important local variables:
 | `RESEND_FROM` | Optional verified sender | verified sender |
 | `CONTACT_RATE_LIMIT` | Contact attempts per IP/hour | `5` |
 
+The web app uses `CMS_API_URL` and server-only `CMS_API_TOKEN` in its `/api/cms/[...path]` proxy. Keep `NEXT_PUBLIC_API_URL=/api/cms`; never put the Strapi token in a `NEXT_PUBLIC_*` variable.
+
 `CORS_ORIGINS` is optional locally and defaults to `http://localhost:3000`. For multiple origins, use a comma-separated list:
 
 ```env

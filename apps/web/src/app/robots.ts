@@ -1,1 +1,7 @@
-export default function robots(){return {rules:{userAgent:'*',allow:'/',disallow:['/admin','/api']},sitemap:'https://kasturii-roadways-premium.rare-snow-5006.chatgpt.site/sitemap.xml'}}
+export default function robots() {
+  return {
+    rules: { userAgent: "*", allow: "/", disallow: ["/admin", "/api"] },
+    sitemap:
+      "https://kasturii-roadways-premium.rare-snow-5006.chatgpt.site/sitemap.xml",
+  };
+}

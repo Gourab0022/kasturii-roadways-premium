@@ -1,4 +1,4 @@
-const apiBaseUrl = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
+const apiBaseUrl = (process.env.NEXT_PUBLIC_API_URL ?? "/api/cms").replace(/\/$/, "");
 
 export function apiUrl(path: string): string {
   return `${apiBaseUrl}${path}`;
@@ -6,7 +6,7 @@ export function apiUrl(path: string): string {
 
 export async function apiFetch(path: string, init?: RequestInit): Promise<Response> {
   return fetch(apiUrl(path), {
-    credentials: "include",
+    credentials: "same-origin",
     ...init,
   });
 }

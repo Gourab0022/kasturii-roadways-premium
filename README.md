@@ -18,7 +18,7 @@ pnpm --dir apps/cms develop
 pnpm --dir apps/web dev
 ```
 
-Strapi runs at `http://localhost:1337`; the website runs at `http://localhost:3000`. Create an administrator at `http://localhost:1337/admin`, then create a read-only API token for the frontend. Set `NEXT_PUBLIC_API_URL=http://localhost:1337/api` in the web environment.
+Strapi runs at `http://localhost:1337`; the website runs at `http://localhost:3000`. Create an administrator at `http://localhost:1337/admin`, then create a read-only API token. Set `CMS_API_URL=http://localhost:1337/api`, `CMS_API_TOKEN=<read-only-token>`, and `NEXT_PUBLIC_API_URL=/api/cms` in the web environment. The Next.js proxy keeps the Strapi token server-side.
 
 Demo data is idempotent:
 

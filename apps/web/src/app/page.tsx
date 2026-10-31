@@ -1,29 +1,1010 @@
 "use client";
-import {useEffect,useState} from 'react';
-import {ArrowUpRight,ArrowRight,BusFront,Menu,X,MapPin,CalendarDays,Users,ShieldCheck,Armchair,Sparkles,MessageCircle,Phone,Mail,Clock,ChevronRight,Route,Moon,Sunrise,Ticket,Check,ChevronDown} from 'lucide-react';
-import {defaults} from '../config';
-import {apiFetch} from '../lib/api';
-export default function Home(){const[c,setC]=useState<any>(defaults);const[menu,setMenu]=useState(false);const[notice,setNotice]=useState('');const[modal,setModal]=useState<any>(null);const[from,setFrom]=useState('');const[to,setTo]=useState('');const[date,setDate]=useState('');const[pass,setPass]=useState('1');const[searched,setSearched]=useState(false);const[status,setStatus]=useState('');const[sending,setSending]=useState(false);const[review,setReview]=useState(0);
-useEffect(()=>{apiFetch('/api/config').then(r=>{if(!r.ok)throw Error();return r.json()}).then(setC).catch(()=>setNotice('Live information is temporarily unavailable. Please try again shortly.'));},[]);
-useEffect(()=>{if(!notice)return;const t=setTimeout(()=>setNotice(''),6500);return()=>clearTimeout(t)},[notice]);
-useEffect(()=>{const fn=(e:KeyboardEvent)=>{if(e.key==='Escape'){setModal(null);setMenu(false)}};window.addEventListener('keydown',fn);return()=>window.removeEventListener('keydown',fn)},[]);
-const go=(url:string,label:string)=>{if(url&&/^https:\/\//.test(url))window.open(url,'_blank','noopener,noreferrer');else setNotice(label+' will be available once official details are confirmed.')};
-const wa=()=>{if(!c.WHATSAPP_NUMBER){setNotice('WhatsApp booking will open when the official support number is confirmed.');return}go('https://wa.me/'+c.WHATSAPP_NUMBER+'?text='+encodeURIComponent(`Hello Kasturii Roadways, I would like to book a bus ticket.\n\nFrom: ${from}\nTo: ${to}\nJourney Date: ${date}\nNumber of Passengers: ${pass}\n\nPlease share available buses/seats and booking details.`),'WhatsApp')};
-const call=()=>c.phone?window.location.assign('tel:'+c.phone):setNotice('The official customer support number will be published soon.');
-const nav=[['Home','#home'],['Routes','#routes'],['Our Coaches','#coaches'],['Amenities','#amenities'],['About Us','#about'],['Contact Us','#contact']];
-const routes=c.routes.filter((r:any)=>!searched||((!from||r.from===from)&&(!to||r.to===to)));
-const cities=Array.from(new Set(c.routes.flatMap((r:any)=>[r.from,r.to]))) as string[];
-return <><header className="header"><a href="#home" className="brand" aria-label="Kasturii Roadways home"><span className="brandmark">K<span>↗</span></span><span>KASTURII<small>ROADWAYS PRIVATE LIMITED</small></span></a><nav className={menu?'open':''} aria-label="Main navigation">{nav.map(([n,h])=><a key={n} href={h} onClick={()=>setMenu(false)}>{n}</a>)}<a className="btn navbook" href="#booking" onClick={()=>setMenu(false)}>Book Ticket <ArrowUpRight size={16}/></a></nav><button className="menubtn" aria-label="Toggle navigation" aria-expanded={menu} onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></header>
-<main><section className="hero" id="home"><img className="heroimg" src="/hero.webp" alt="Illustration of a luxury navy coach travelling along a highway at dusk" fetchPriority="high"/><div className="heroshade"/><div className="herocontent wrap"><div className="eyebrow"><span/> {c.banner}</div><h1>Travel Beyond<br/><em>Ordinary.</em></h1><p>Experience premium overnight journeys with Kasturii Roadways — designed around your comfort, safety and convenience.</p><div className="actions"><a href="#booking" className="btn">Book Online <ArrowUpRight size={18}/></a><button className="glass" onClick={wa}><MessageCircle size={18}/> Book on WhatsApp</button></div><div className="tagline"><span/> Ride in Comfort, Travel in Pride</div></div><div className="herobottom wrap"><span><MapPin size={14}/> ROOTED IN ODISHA. MADE FOR YOUR JOURNEY.</span><span>CONCEPT COACH IMAGE · ILLUSTRATIVE</span></div></section>
-<section className="bookingwrap wrap" id="journey"><div className="bookingbox"><div className="bookingtitle"><h2>Where will the night take you?</h2><span><Ticket size={15}/> Book your journey</span></div><form className="search" onSubmit={e=>{e.preventDefault();if(from&&from===to){setNotice('Please choose different departure and destination cities.');return}setSearched(true);document.querySelector('#routes')?.scrollIntoView({behavior:'smooth'})}}><label><span><MapPin/> From</span><select value={from} onChange={e=>setFrom(e.target.value)}><option value="">Select departure city</option>{cities.map(x=><option key={x}>{x}</option>)}</select></label><label><span><MapPin/> To</span><select value={to} onChange={e=>setTo(e.target.value)}><option value="">Select destination</option>{cities.map(x=><option key={x}>{x}</option>)}</select></label><label><span><CalendarDays/> Journey date</span><input type="date" required min={new Date().toLocaleDateString('en-CA')} value={date} onChange={e=>setDate(e.target.value)}/></label><label><span><Users/> Passengers</span><select value={pass} onChange={e=>setPass(e.target.value)}>{[1,2,3,4,5,6].map(n=><option key={n}>{n}</option>)}</select></label><button className="btn" type="submit">Find a Bus <ArrowRight size={18}/></button></form><p className="bookingnote">Your next journey begins here. Schedules and booking options will appear once confirmed.</p></div></section>
-<div className="values wrap"><span><Armchair/> Comfort at every mile</span><span><ShieldCheck/> Passenger-first thinking</span><span><Moon/> Made for overnight travel</span><span><MapPin/> A vision rooted in Odisha</span></div>
-<section className="section wrap" id="routes"><div className="sectionhead"><div><p className="eyebrow gold">THE ROAD AHEAD</p><h2>Familiar places.<br/><span>Extraordinary journeys.</span></h2></div><div><p>Discover our intercity connections.<br/>Your destination, a more comfortable way.</p><button className="textbtn" onClick={()=>{setSearched(false);setFrom('');setTo('')}}>Explore all routes <ArrowRight size={17}/></button></div></div><div className="routegrid">{routes.length?routes.map((r:any,i:number)=><article className="routecard" key={i}><div className="routevisual"><Route size={40}/><span>{r.type}</span></div><div className="routebody"><span className="micro">KASTURII CONNECTIONS</span><h3>{r.from} <ArrowRight size={19}/> {r.to}</h3><p>{r.departure} → {r.arrival} · {r.duration}</p><p>{(r.amenities||[]).join(' · ')}</p><div className="routefoot"><span>From <b>{r.fare?'₹'+r.fare:'To be confirmed'}</b></span><button className="textbtn" onClick={()=>setModal({title:r.from+' → '+r.to,text:`Departure: ${r.departure||'To be confirmed'} · Arrival: ${r.arrival||'To be confirmed'}\nBoarding: ${(r.boarding||[]).join(', ')||'To be confirmed'}\nDropping: ${(r.dropping||[]).join(', ')||'To be confirmed'}`,book:true})}>View / Book <ArrowUpRight size={17}/></button></div></div></article>):<><article className="routecard sample"><div className="routevisual odisha"><MapPin size={42}/><span>ODISHA, INDIA</span></div><div className="routebody"><span className="pill">SAMPLE ROUTE · NOT OPEN FOR BOOKING</span><h3>Bhubaneswar <ArrowRight size={19}/> Your destination</h3><p>Departure · Arrival · Duration — to be confirmed</p><p>Coach, amenities and fare — to be confirmed</p><div className="routefoot"><span>Good journeys are on the way.</span><button aria-label="Sample route details" className="circle" onClick={()=>setModal({title:'Our network is taking shape',text:'This is a sample route layout, not an operational service. Verified destinations, timings, coaches and fares will be added before booking opens.'})}><ArrowUpRight size={20}/></button></div></div></article><div className="routenote"><span className="lineicon"><Route size={30}/></span><h3>{searched?'No confirmed services yet.':'A new way to connect.'}</h3><p>Our route network is being prepared. Come back for confirmed destinations, boarding points and departure times.</p><a href="#contact" className="textbtn">Enquire about a journey <ArrowRight size={17}/></a></div></>}</div></section>
-<section className="coachsection" id="coaches"><div className="wrap coachgrid"><div className="coachphoto"><img src="/hero.webp" alt="Illustrative luxury coach exterior" loading="lazy"/><span>THE NEXT CHAPTER OF NIGHT TRAVEL</span><small>Illustrative image · official fleet photos coming soon</small></div><div className="coachcopy"><p className="eyebrow gold">NOT JUST A RIDE. AN EXPERIENCE.</p><h2>Let the road unfold.<br/><em>Make yourself<br/>comfortable.</em></h2><p>Travel in Premium Comfort. Our vision brings together thoughtful coach design and passenger-focused service, so the journey feels as good as the destination.</p><div className="coachdetail"><BusFront/><div><h3>Your coach, in detail</h3><p>Confirmed coach categories, interiors and features will be published here before services open.</p></div></div><a className="outline" href="#amenities">Explore the experience <ArrowUpRight size={18}/></a></div></div>{c.coaches.length>0&&<div className="wrap cards">{c.coaches.map((v:any,i:number)=><article className="card" key={i}>{v.image&&<img src={v.image} alt={v.name} loading="lazy"/>}<h3>{v.name}</h3><p>{v.type}</p><p>{v.description}</p><p>{(v.amenities||[]).join(' · ')}</p></article>)}</div>}{c.gallery.length>0&&<div className="wrap gallery">{c.gallery.map((g:any,i:number)=><button key={i} onClick={()=>setModal({title:g.caption,image:g.src})}><img loading="lazy" src={g.src} alt={g.caption}/><span>{g.caption}</span></button>)}</div>}</section>
-<section className="section wrap" id="amenities"><div className="center"><p className="eyebrow gold">THE LITTLE THINGS. THOUGHTFULLY CONSIDERED.</p><h2>Comfort designed around you.</h2><p>Every coach is different. Explore verified amenities with your chosen service.</p></div>{c.coaches.length>0?<div className="cards">{c.coaches.map((v:any,i:number)=><article key={i} className="card"><h3>{v.name}</h3>{(v.amenities||[]).map((a:string)=><p key={a}><Check size={15}/> {a}</p>)}</article>)}</div>:<div className="amenityempty"><Armchair size={30}/><p>Coach-specific amenities will be listed when our fleet details are confirmed.</p></div>}<div className="why"><div><p className="eyebrow gold">OUR PROMISE</p><h2>Why travel<br/>with Kasturii?</h2><p>A better journey starts with<br/>what matters to you.</p></div><div className="whygrid">{[[Armchair,'Premium Comfort','A vision for more restful overnight journeys.'],[ShieldCheck,'Safety First','Passenger safety at the heart of our operating priorities.'],[Sparkles,'Clean & Considered','A focus on clean, thoughtfully maintained spaces.'],[Users,'People Who Care','A commitment to courteous, passenger-focused service.']].map(([Icon,title,copy]:any)=><article key={title}><Icon/><h3>{title}</h3><p>{copy}</p></article>)}</div></div><div className="safety"><ShieldCheck size={44}/><div><h3>Your safety, our priority.</h3><p>{c.safety.length?c.safety.join(' · '):'Verified safety equipment and operational features will be listed with each coach before booking opens.'}</p></div><span>CARE AT EVERY TURN</span></div></section>
-<section className="journeysteps"><div className="wrap"><p className="eyebrow gold">FROM YOUR FIRST CLICK TO YOUR FINAL STOP</p><h2>A little planning. A lot of peace of mind.</h2><div className="steps">{[[Route,'Choose your route'],[Ticket,'Book your ticket'],[BusFront,'Board your coach'],[Moon,'Relax & sleep'],[Sunrise,'Arrive refreshed']].map(([Icon,text]:any,i:number)=><div key={text}><span className="stepnum">0{i+1}</span><Icon/><h3>{text}</h3></div>)}</div></div></section>
-<section className="section wrap" id="booking"><div className="center"><p className="eyebrow gold">YOUR JOURNEY. YOUR CHOICE.</p><h2>Book your ticket online.</h2><p>Choose your preferred platform and reserve your Kasturii Roadways journey.</p></div><div className="platforms">{[['redBus','REDBUS_BOOKING_URL','Simple booking. A familiar platform.'],['MakeMyTrip','MAKEMYTRIP_BOOKING_URL','Plan your next trip in a few clicks.']].map(([n,k,t])=><button className="platform" key={n} onClick={()=>go(c[k],n+' booking')}><div><span className={n==='redBus'?'redbus':'mmt'}>{n}</span><p>{t}</p><small>{c[k]?'Book on '+n:'Official listing coming soon'}</small></div><ArrowUpRight size={24}/></button>)}</div><div className="whatsbanner"><MessageCircle size={40}/><div><small>PREFER BOOKING DIRECTLY?</small><h3>A conversation away from your next journey.</h3><p>Book your ticket on WhatsApp when our official channel opens.</p></div><button onClick={wa} className="btn">Chat with us <ArrowUpRight size={17}/></button></div></section>
-<section className="about" id="about"><div className="wrap aboutgrid"><div><p className="eyebrow gold">ROOTED IN ODISHA. LOOKING AHEAD.</p><h2>More than miles.<br/><em>A promise.</em></h2></div><div><p>Kasturii Roadways Private Limited is a passenger transportation company focused on delivering a premium night-coach travel experience.</p><p>Our vision is to make intercity road travel more comfortable, dependable and enjoyable through quality coaches, professional service and passenger-focused operations.</p><div className="aboutquote">Ride in Comfort, Travel in Pride.</div></div></div></section>
-{c.reviews.length>0&&<section className="section wrap center"><p className="eyebrow gold">PASSENGER STORIES</p><h2>What our passengers say</h2><blockquote>{c.reviews[review%c.reviews.length].text}</blockquote><p>{c.reviews[review%c.reviews.length].name}</p><button className="outline" onClick={()=>setReview(review+1)}>Next review <ArrowRight size={16}/></button></section>}
-<section className="section wrap faqsection"><div><p className="eyebrow gold">BEFORE YOU SET OFF</p><h2>A few things<br/>you might wonder.</h2><p>Everything you need for a smoother journey.</p><a href="#contact" className="textbtn">Have another question? <ArrowRight size={17}/></a></div><div className="faqs">{c.faqs.map((f:any,i:number)=><details key={i}><summary>{f.q}<ChevronDown size={17}/></summary><p>{f.a}</p></details>)}</div></section>
-<section className="contactsection" id="contact"><div className="wrap contactgrid"><div><p className="eyebrow gold">WE'RE HERE FOR THE JOURNEY</p><h2>Let's get<br/><em>you going.</em></h2><p>Questions about a route, a coach or your next trip?<br/>Send an enquiry to Kasturii Roadways.</p><div className="contactitem"><Phone/><div><small>CUSTOMER SUPPORT</small><p>{c.phone||'Official number coming soon'}</p></div></div><div className="contactitem"><Mail/><div><small>EMAIL US</small><p>{c.email||'Support email coming soon'}</p>{c.businessEmail&&<p>{c.businessEmail}</p>}</div></div><div className="contactitem"><MapPin/><div><small>OUR OFFICES</small><p>{c.registeredOffice||'Registered office details to be announced'}</p>{c.operationalOffice&&<p>{c.operationalOffice}</p>}{c.officeHours&&<p>{c.officeHours}</p>}</div></div><div className="actions"><button onClick={call} className="textbtn">Call now ↗</button><button onClick={wa} className="textbtn">WhatsApp us ↗</button><button className="textbtn" onClick={()=>c.email?window.location.assign('mailto:'+c.email):setNotice('Support email will be announced soon.')}>Email us ↗</button>{c.mapUrl&&<button className="textbtn" onClick={()=>go(c.mapUrl,'Directions')}>Get directions ↗</button>}</div></div><form className="contactform" onSubmit={async e=>{e.preventDefault();setSending(true);setStatus('');const form=e.currentTarget;try{const r=await apiFetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form)))});const b=await r.json() as any;if(r.ok){setStatus('Thank you. Your enquiry has been saved for the Kasturii Roadways team.');form.reset()}else setStatus(b.error)}catch{setStatus('Could not send your message. Please try again.')}setSending(false)}}><h3>Send us a message</h3><div className="formrow"><label>Your name<input name="name" placeholder="Full name" maxLength={100} required/></label><label>Mobile number<input name="mobile" type="tel" placeholder="Your mobile number" pattern="[+0-9 ()\-]{7,20}" required/></label></div><label>Email address<input name="email" type="email" placeholder="you@example.com" required maxLength={150}/></label><label>Subject<select name="subject" required><option value="">How can we help?</option><option>Route enquiry</option><option>Booking assistance</option><option>Business enquiry</option><option>Other</option></select></label><label>Message<textarea name="message" placeholder="Tell us a little about your journey…" rows={4} maxLength={4000} required/></label><input className="honeypot" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"/><small>We store your enquiry to respond to your request. Please don't include payment details.</small><button className="btn" disabled={sending}>{sending?'Sending…':'Send Message'} <ArrowUpRight size={17}/></button><p role="status">{status}</p></form></div></section>
-</main><footer><div className="wrap footergrid"><div><a className="brand" href="#home"><span className="brandmark">K<span>↗</span></span><span>KASTURII<small>ROADWAYS PRIVATE LIMITED</small></span></a><p>Ride in Comfort, Travel in Pride.</p><small>A new perspective on overnight travel.</small></div><div><h4>EXPLORE</h4>{nav.slice(1).map(([n,h])=><a key={n} href={h}>{n}</a>)}<a href="#amenities">Amenities</a></div><div><h4>YOUR NEXT JOURNEY</h4><button onClick={()=>go(c.REDBUS_BOOKING_URL,'redBus')}>Book on redBus ↗</button><button onClick={()=>go(c.MAKEMYTRIP_BOOKING_URL,'MakeMyTrip')}>Book on MakeMyTrip ↗</button><button onClick={wa}>Book on WhatsApp ↗</button>{['facebook','instagram','youtube'].filter(k=>c[k]).map(k=><button key={k} onClick={()=>go(c[k],k)}>{k} ↗</button>)}</div><div><h4>GOOD TO KNOW</h4>{[['Privacy Policy','privacy'],['Terms & Conditions','terms'],['Cancellation & Refund','cancellation']].map(([n,k])=><button key={k} onClick={()=>setModal({title:n,text:c[k]})}>{n}</button>)}<a href="/admin">Staff access ↗</a></div></div><div className="wrap copyright"><span>© {new Date().getFullYear()} Kasturii Roadways Private Limited. All rights reserved.</span><span>MADE FOR THE JOURNEY.</span></div></footer><button className="floatwa" aria-label="Chat with us on WhatsApp" onClick={wa}><MessageCircle size={25}/></button><div className="mobilebar"><button onClick={call}><Phone size={17}/>Call</button><button onClick={wa}><MessageCircle size={17}/>WhatsApp</button><a href="#booking"><Ticket size={17}/>Book Ticket</a></div>{notice&&<div className="toast" role="status">{notice}<button onClick={()=>setNotice('')} aria-label="Dismiss"><X size={18}/></button></div>}{modal&&<div className="modalback" onClick={()=>setModal(null)}><dialog open aria-modal="true" aria-labelledby="dialogtitle" onClick={e=>e.stopPropagation()}><button className="close" autoFocus onClick={()=>setModal(null)} aria-label="Close dialog"><X/></button><h2 id="dialogtitle">{modal.title}</h2>{modal.image&&<img src={modal.image} alt={modal.title}/>}<p>{modal.text}</p>{modal.book&&<a className="btn" href="#booking" onClick={()=>setModal(null)}>See booking options <ArrowRight size={16}/></a>}</dialog></div>}<script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify({'@context':'https://schema.org','@type':'Organization',name:'Kasturii Roadways Private Limited',url:'https://kasturii-roadways-premium.rare-snow-5006.chatgpt.site',slogan:'Ride in Comfort, Travel in Pride'})}}/></>}
+import { useEffect, useState } from "react";
+import {
+    ArrowUpRight,
+    ArrowRight,
+    BusFront,
+    Menu,
+    X,
+    MapPin,
+    CalendarDays,
+    Users,
+    ShieldCheck,
+    Armchair,
+    Sparkles,
+    MessageCircle,
+    Phone,
+    Mail,
+    Clock,
+    ChevronRight,
+    Route,
+    Moon,
+    Sunrise,
+    Ticket,
+    Check,
+    ChevronDown,
+} from "lucide-react";
+import { defaults } from "../config";
+import { submitContact, getSiteContent } from "../lib/cms-api";
+export default function Home() {
+    const [c, setC] = useState<any>(defaults);
+    const [menu, setMenu] = useState(false);
+    const [notice, setNotice] = useState("");
+    const [modal, setModal] = useState<any>(null);
+    const [from, setFrom] = useState("");
+    const [to, setTo] = useState("");
+    const [date, setDate] = useState("");
+    const [pass, setPass] = useState("1");
+    const [searched, setSearched] = useState(false);
+    const [status, setStatus] = useState("");
+    const [sending, setSending] = useState(false);
+    const [review, setReview] = useState(0);
+    useEffect(() => {
+        getSiteContent()
+            .then(setC)
+            .catch(() =>
+                setNotice(
+                    "Live information is temporarily unavailable. Please try again shortly.",
+                ),
+            );
+    }, []);
+    useEffect(() => {
+        if (!notice) return;
+        const t = setTimeout(() => setNotice(""), 6500);
+        return () => clearTimeout(t);
+    }, [notice]);
+    useEffect(() => {
+        const fn = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setModal(null);
+                setMenu(false);
+            }
+        };
+        window.addEventListener("keydown", fn);
+        return () => window.removeEventListener("keydown", fn);
+    }, []);
+    const go = (url: string, label: string) => {
+        if (url && /^https:\/\//.test(url))
+            window.open(url, "_blank", "noopener,noreferrer");
+        else
+            setNotice(
+                label + " will be available once official details are confirmed.",
+            );
+    };
+    const wa = () => {
+        if (!c.WHATSAPP_NUMBER) {
+            setNotice(
+                "WhatsApp booking will open when the official support number is confirmed.",
+            );
+            return;
+        }
+        go(
+            "https://wa.me/" +
+            c.WHATSAPP_NUMBER +
+            "?text=" +
+            encodeURIComponent(
+                `Hello Kasturii Roadways, I would like to book a bus ticket.\n\nFrom: ${from}\nTo: ${to}\nJourney Date: ${date}\nNumber of Passengers: ${pass}\n\nPlease share available buses/seats and booking details.`,
+            ),
+            "WhatsApp",
+        );
+    };
+    const call = () =>
+        c.phone
+            ? window.location.assign("tel:" + c.phone)
+            : setNotice(
+                "The official customer support number will be published soon.",
+            );
+    const nav = [
+        ["Home", "#home"],
+        ["Routes", "#routes"],
+        ["Our Coaches", "#coaches"],
+        ["Amenities", "#amenities"],
+        ["About Us", "#about"],
+        ["Contact Us", "#contact"],
+    ];
+    const routes = c.routes.filter(
+        (r: any) =>
+            !searched || ((!from || r.from === from) && (!to || r.to === to)),
+    );
+    const cities = Array.from(
+        new Set(c.routes.flatMap((r: any) => [r.from, r.to])),
+    ) as string[];
+    return (
+        <>
+            <header className="header">
+                <a href="#home" className="brand" aria-label="Kasturii Roadways home">
+                    <span className="brandmark">
+                        K<span>↗</span>
+                    </span>
+                    <span>
+                        KASTURII<small>ROADWAYS PRIVATE LIMITED</small>
+                    </span>
+                </a>
+                <nav className={menu ? "open" : ""} aria-label="Main navigation">
+                    {nav.map(([n, h]) => (
+                        <a key={n} href={h} onClick={() => setMenu(false)}>
+                            {n}
+                        </a>
+                    ))}
+                    <a
+                        className="btn navbook"
+                        href="#booking"
+                        onClick={() => setMenu(false)}
+                    >
+                        Book Ticket <ArrowUpRight size={16} />
+                    </a>
+                </nav>
+                <button
+                    className="menubtn"
+                    aria-label="Toggle navigation"
+                    aria-expanded={menu}
+                    onClick={() => setMenu(!menu)}
+                >
+                    {menu ? <X /> : <Menu />}
+                </button>
+            </header>
+            <main>
+                <section className="hero" id="home">
+                    <img
+                        className="heroimg"
+                        src="/hero.webp"
+                        alt="Illustration of a luxury navy coach travelling along a highway at dusk"
+                        fetchPriority="high"
+                    />
+                    <div className="heroshade" />
+                    <div className="herocontent wrap">
+                        <div className="eyebrow">
+                            <span /> {c.banner}
+                        </div>
+                        <h1>
+                            Travel Beyond
+                            <br />
+                            <em>Ordinary.</em>
+                        </h1>
+                        <p>
+                            Experience premium overnight journeys with Kasturii Roadways —
+                            designed around your comfort, safety and convenience.
+                        </p>
+                        <div className="actions">
+                            <a href="#booking" className="btn">
+                                Book Online <ArrowUpRight size={18} />
+                            </a>
+                            <button className="glass" onClick={wa}>
+                                <MessageCircle size={18} /> Book on WhatsApp
+                            </button>
+                        </div>
+                        <div className="tagline">
+                            <span /> Ride in Comfort, Travel in Pride
+                        </div>
+                    </div>
+                    <div className="herobottom wrap">
+                        <span>
+                            <MapPin size={14} /> ROOTED IN ODISHA. MADE FOR YOUR JOURNEY.
+                        </span>
+                        <span>CONCEPT COACH IMAGE · ILLUSTRATIVE</span>
+                    </div>
+                </section>
+                <section className="bookingwrap wrap" id="journey">
+                    <div className="bookingbox">
+                        <div className="bookingtitle">
+                            <h2>Where will the night take you?</h2>
+                            <span>
+                                <Ticket size={15} /> Book your journey
+                            </span>
+                        </div>
+                        <form
+                            className="search"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                if (from && from === to) {
+                                    setNotice(
+                                        "Please choose different departure and destination cities.",
+                                    );
+                                    return;
+                                }
+                                setSearched(true);
+                                document
+                                    .querySelector("#routes")
+                                    ?.scrollIntoView({ behavior: "smooth" });
+                            }}
+                        >
+                            <label>
+                                <span>
+                                    <MapPin /> From
+                                </span>
+                                <select value={from} onChange={(e) => setFrom(e.target.value)}>
+                                    <option value="">Select departure city</option>
+                                    {cities.map((x) => (
+                                        <option key={x}>{x}</option>
+                                    ))}
+                                </select>
+                            </label>
+                            <label>
+                                <span>
+                                    <MapPin /> To
+                                </span>
+                                <select value={to} onChange={(e) => setTo(e.target.value)}>
+                                    <option value="">Select destination</option>
+                                    {cities.map((x) => (
+                                        <option key={x}>{x}</option>
+                                    ))}
+                                </select>
+                            </label>
+                            <label>
+                                <span>
+                                    <CalendarDays /> Journey date
+                                </span>
+                                <input
+                                    type="date"
+                                    required
+                                    min={new Date().toLocaleDateString("en-CA")}
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                />
+                            </label>
+                            <label>
+                                <span>
+                                    <Users /> Passengers
+                                </span>
+                                <select value={pass} onChange={(e) => setPass(e.target.value)}>
+                                    {[1, 2, 3, 4, 5, 6].map((n) => (
+                                        <option key={n}>{n}</option>
+                                    ))}
+                                </select>
+                            </label>
+                            <button className="btn" type="submit">
+                                Find a Bus <ArrowRight size={18} />
+                            </button>
+                        </form>
+                        <p className="bookingnote">
+                            Your next journey begins here. Schedules and booking options will
+                            appear once confirmed.
+                        </p>
+                    </div>
+                </section>
+                <div className="values wrap">
+                    <span>
+                        <Armchair /> Comfort at every mile
+                    </span>
+                    <span>
+                        <ShieldCheck /> Passenger-first thinking
+                    </span>
+                    <span>
+                        <Moon /> Made for overnight travel
+                    </span>
+                    <span>
+                        <MapPin /> A vision rooted in Odisha
+                    </span>
+                </div>
+                <section className="section wrap" id="routes">
+                    <div className="sectionhead">
+                        <div>
+                            <p className="eyebrow gold">THE ROAD AHEAD</p>
+                            <h2>
+                                Familiar places.
+                                <br />
+                                <span>Extraordinary journeys.</span>
+                            </h2>
+                        </div>
+                        <div>
+                            <p>
+                                Discover our intercity connections.
+                                <br />
+                                Your destination, a more comfortable way.
+                            </p>
+                            <button
+                                className="textbtn"
+                                onClick={() => {
+                                    setSearched(false);
+                                    setFrom("");
+                                    setTo("");
+                                }}
+                            >
+                                Explore all routes <ArrowRight size={17} />
+                            </button>
+                        </div>
+                    </div>
+                    <div className="routegrid">
+                        {routes.length ? (
+                            routes.map((r: any, i: number) => (
+                                <article className="routecard" key={i}>
+                                    <div className="routevisual">
+                                        <Route size={40} />
+                                        <span>{r.type}</span>
+                                    </div>
+                                    <div className="routebody">
+                                        <span className="micro">KASTURII CONNECTIONS</span>
+                                        <h3>
+                                            {r.from} <ArrowRight size={19} /> {r.to}
+                                        </h3>
+                                        <p>
+                                            {r.departure} → {r.arrival} · {r.duration}
+                                        </p>
+                                        <p>{(r.amenities || []).join(" · ")}</p>
+                                        <div className="routefoot">
+                                            <span>
+                                                From <b>{r.fare ? "₹" + r.fare : "To be confirmed"}</b>
+                                            </span>
+                                            <button
+                                                className="textbtn"
+                                                onClick={() =>
+                                                    setModal({
+                                                        title: r.from + " → " + r.to,
+                                                        text: `Departure: ${r.departure || "To be confirmed"} · Arrival: ${r.arrival || "To be confirmed"}\nBoarding: ${(r.boarding || []).join(", ") || "To be confirmed"}\nDropping: ${(r.dropping || []).join(", ") || "To be confirmed"}`,
+                                                        book: true,
+                                                    })
+                                                }
+                                            >
+                                                View / Book <ArrowUpRight size={17} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </article>
+                            ))
+                        ) : (
+                            <>
+                                <article className="routecard sample">
+                                    <div className="routevisual odisha">
+                                        <MapPin size={42} />
+                                        <span>ODISHA, INDIA</span>
+                                    </div>
+                                    <div className="routebody">
+                                        <span className="pill">
+                                            SAMPLE ROUTE · NOT OPEN FOR BOOKING
+                                        </span>
+                                        <h3>
+                                            Bhubaneswar <ArrowRight size={19} /> Your destination
+                                        </h3>
+                                        <p>Departure · Arrival · Duration — to be confirmed</p>
+                                        <p>Coach, amenities and fare — to be confirmed</p>
+                                        <div className="routefoot">
+                                            <span>Good journeys are on the way.</span>
+                                            <button
+                                                aria-label="Sample route details"
+                                                className="circle"
+                                                onClick={() =>
+                                                    setModal({
+                                                        title: "Our network is taking shape",
+                                                        text: "This is a sample route layout, not an operational service. Verified destinations, timings, coaches and fares will be added before booking opens.",
+                                                    })
+                                                }
+                                            >
+                                                <ArrowUpRight size={20} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </article>
+                                <div className="routenote">
+                                    <span className="lineicon">
+                                        <Route size={30} />
+                                    </span>
+                                    <h3>
+                                        {searched
+                                            ? "No confirmed services yet."
+                                            : "A new way to connect."}
+                                    </h3>
+                                    <p>
+                                        Our route network is being prepared. Come back for confirmed
+                                        destinations, boarding points and departure times.
+                                    </p>
+                                    <a href="#contact" className="textbtn">
+                                        Enquire about a journey <ArrowRight size={17} />
+                                    </a>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </section>
+                <section className="coachsection" id="coaches">
+                    <div className="wrap coachgrid">
+                        <div className="coachphoto">
+                            <img
+                                src="/hero.webp"
+                                alt="Illustrative luxury coach exterior"
+                                loading="lazy"
+                            />
+                            <span>THE NEXT CHAPTER OF NIGHT TRAVEL</span>
+                            <small>
+                                Illustrative image · official fleet photos coming soon
+                            </small>
+                        </div>
+                        <div className="coachcopy">
+                            <p className="eyebrow gold">NOT JUST A RIDE. AN EXPERIENCE.</p>
+                            <h2>
+                                Let the road unfold.
+                                <br />
+                                <em>
+                                    Make yourself
+                                    <br />
+                                    comfortable.
+                                </em>
+                            </h2>
+                            <p>
+                                Travel in Premium Comfort. Our vision brings together thoughtful
+                                coach design and passenger-focused service, so the journey feels
+                                as good as the destination.
+                            </p>
+                            <div className="coachdetail">
+                                <BusFront />
+                                <div>
+                                    <h3>Your coach, in detail</h3>
+                                    <p>
+                                        Confirmed coach categories, interiors and features will be
+                                        published here before services open.
+                                    </p>
+                                </div>
+                            </div>
+                            <a className="outline" href="#amenities">
+                                Explore the experience <ArrowUpRight size={18} />
+                            </a>
+                        </div>
+                    </div>
+                    {c.coaches.length > 0 && (
+                        <div className="wrap cards">
+                            {c.coaches.map((v: any, i: number) => (
+                                <article className="card" key={i}>
+                                    {v.image && <img src={v.image} alt={v.name} loading="lazy" />}
+                                    <h3>{v.name}</h3>
+                                    <p>{v.type}</p>
+                                    <p>{v.description}</p>
+                                    <p>{(v.amenities || []).join(" · ")}</p>
+                                </article>
+                            ))}
+                        </div>
+                    )}
+                    {c.gallery.length > 0 && (
+                        <div className="wrap gallery">
+                            {c.gallery.map((g: any, i: number) => (
+                                <button
+                                    key={i}
+                                    onClick={() => setModal({ title: g.caption, image: g.src })}
+                                >
+                                    <img loading="lazy" src={g.src} alt={g.caption} />
+                                    <span>{g.caption}</span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </section>
+                <section className="section wrap" id="amenities">
+                    <div className="center">
+                        <p className="eyebrow gold">
+                            THE LITTLE THINGS. THOUGHTFULLY CONSIDERED.
+                        </p>
+                        <h2>Comfort designed around you.</h2>
+                        <p>
+                            Every coach is different. Explore verified amenities with your
+                            chosen service.
+                        </p>
+                    </div>
+                    {c.coaches.length > 0 ? (
+                        <div className="cards">
+                            {c.coaches.map((v: any, i: number) => (
+                                <article key={i} className="card">
+                                    <h3>{v.name}</h3>
+                                    {(v.amenities || []).map((a: string) => (
+                                        <p key={a}>
+                                            <Check size={15} /> {a}
+                                        </p>
+                                    ))}
+                                </article>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="amenityempty">
+                            <Armchair size={30} />
+                            <p>
+                                Coach-specific amenities will be listed when our fleet details
+                                are confirmed.
+                            </p>
+                        </div>
+                    )}
+                    <div className="why">
+                        <div>
+                            <p className="eyebrow gold">OUR PROMISE</p>
+                            <h2>
+                                Why travel
+                                <br />
+                                with Kasturii?
+                            </h2>
+                            <p>
+                                A better journey starts with
+                                <br />
+                                what matters to you.
+                            </p>
+                        </div>
+                        <div className="whygrid">
+                            {[
+                                [
+                                    Armchair,
+                                    "Premium Comfort",
+                                    "A vision for more restful overnight journeys.",
+                                ],
+                                [
+                                    ShieldCheck,
+                                    "Safety First",
+                                    "Passenger safety at the heart of our operating priorities.",
+                                ],
+                                [
+                                    Sparkles,
+                                    "Clean & Considered",
+                                    "A focus on clean, thoughtfully maintained spaces.",
+                                ],
+                                [
+                                    Users,
+                                    "People Who Care",
+                                    "A commitment to courteous, passenger-focused service.",
+                                ],
+                            ].map(([Icon, title, copy]: any) => (
+                                <article key={title}>
+                                    <Icon />
+                                    <h3>{title}</h3>
+                                    <p>{copy}</p>
+                                </article>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="safety">
+                        <ShieldCheck size={44} />
+                        <div>
+                            <h3>Your safety, our priority.</h3>
+                            <p>
+                                {c.safety.length
+                                    ? c.safety.join(" · ")
+                                    : "Verified safety equipment and operational features will be listed with each coach before booking opens."}
+                            </p>
+                        </div>
+                        <span>CARE AT EVERY TURN</span>
+                    </div>
+                </section>
+                <section className="journeysteps">
+                    <div className="wrap">
+                        <p className="eyebrow gold">
+                            FROM YOUR FIRST CLICK TO YOUR FINAL STOP
+                        </p>
+                        <h2>A little planning. A lot of peace of mind.</h2>
+                        <div className="steps">
+                            {[
+                                [Route, "Choose your route"],
+                                [Ticket, "Book your ticket"],
+                                [BusFront, "Board your coach"],
+                                [Moon, "Relax & sleep"],
+                                [Sunrise, "Arrive refreshed"],
+                            ].map(([Icon, text]: any, i: number) => (
+                                <div key={text}>
+                                    <span className="stepnum">0{i + 1}</span>
+                                    <Icon />
+                                    <h3>{text}</h3>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+                <section className="section wrap" id="booking">
+                    <div className="center">
+                        <p className="eyebrow gold">YOUR JOURNEY. YOUR CHOICE.</p>
+                        <h2>Book your ticket online.</h2>
+                        <p>
+                            Choose your preferred platform and reserve your Kasturii Roadways
+                            journey.
+                        </p>
+                    </div>
+                    <div className="platforms">
+                        {[
+                            [
+                                "redBus",
+                                "REDBUS_BOOKING_URL",
+                                "Simple booking. A familiar platform.",
+                            ],
+                            [
+                                "MakeMyTrip",
+                                "MAKEMYTRIP_BOOKING_URL",
+                                "Plan your next trip in a few clicks.",
+                            ],
+                        ].map(([n, k, t]) => (
+                            <button
+                                className="platform"
+                                key={n}
+                                onClick={() => go(c[k], n + " booking")}
+                            >
+                                <div>
+                                    <span className={n === "redBus" ? "redbus" : "mmt"}>{n}</span>
+                                    <p>{t}</p>
+                                    <small>
+                                        {c[k] ? "Book on " + n : "Official listing coming soon"}
+                                    </small>
+                                </div>
+                                <ArrowUpRight size={24} />
+                            </button>
+                        ))}
+                    </div>
+                    <div className="whatsbanner">
+                        <MessageCircle size={40} />
+                        <div>
+                            <small>PREFER BOOKING DIRECTLY?</small>
+                            <h3>A conversation away from your next journey.</h3>
+                            <p>
+                                Book your ticket on WhatsApp when our official channel opens.
+                            </p>
+                        </div>
+                        <button onClick={wa} className="btn">
+                            Chat with us <ArrowUpRight size={17} />
+                        </button>
+                    </div>
+                </section>
+                <section className="about" id="about">
+                    <div className="wrap aboutgrid">
+                        <div>
+                            <p className="eyebrow gold">ROOTED IN ODISHA. LOOKING AHEAD.</p>
+                            <h2>
+                                More than miles.
+                                <br />
+                                <em>A promise.</em>
+                            </h2>
+                        </div>
+                        <div>
+                            <p>
+                                Kasturii Roadways Private Limited is a passenger transportation
+                                company focused on delivering a premium night-coach travel
+                                experience.
+                            </p>
+                            <p>
+                                Our vision is to make intercity road travel more comfortable,
+                                dependable and enjoyable through quality coaches, professional
+                                service and passenger-focused operations.
+                            </p>
+                            <div className="aboutquote">
+                                Ride in Comfort, Travel in Pride.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {c.reviews.length > 0 && (
+                    <section className="section wrap center">
+                        <p className="eyebrow gold">PASSENGER STORIES</p>
+                        <h2>What our passengers say</h2>
+                        <blockquote>{c.reviews[review % c.reviews.length].text}</blockquote>
+                        <p>{c.reviews[review % c.reviews.length].name}</p>
+                        <button className="outline" onClick={() => setReview(review + 1)}>
+                            Next review <ArrowRight size={16} />
+                        </button>
+                    </section>
+                )}
+                <section className="section wrap faqsection">
+                    <div>
+                        <p className="eyebrow gold">BEFORE YOU SET OFF</p>
+                        <h2>
+                            A few things
+                            <br />
+                            you might wonder.
+                        </h2>
+                        <p>Everything you need for a smoother journey.</p>
+                        <a href="#contact" className="textbtn">
+                            Have another question? <ArrowRight size={17} />
+                        </a>
+                    </div>
+                    <div className="faqs">
+                        {c.faqs.map((f: any, i: number) => (
+                            <details key={i}>
+                                <summary>
+                                    {f.q}
+                                    <ChevronDown size={17} />
+                                </summary>
+                                <p>{f.a}</p>
+                            </details>
+                        ))}
+                    </div>
+                </section>
+                <section className="contactsection" id="contact">
+                    <div className="wrap contactgrid">
+                        <div>
+                            <p className="eyebrow gold">WE'RE HERE FOR THE JOURNEY</p>
+                            <h2>
+                                Let's get
+                                <br />
+                                <em>you going.</em>
+                            </h2>
+                            <p>
+                                Questions about a route, a coach or your next trip?
+                                <br />
+                                Send an enquiry to Kasturii Roadways.
+                            </p>
+                            <div className="contactitem">
+                                <Phone />
+                                <div>
+                                    <small>CUSTOMER SUPPORT</small>
+                                    <p>{c.phone || "Official number coming soon"}</p>
+                                </div>
+                            </div>
+                            <div className="contactitem">
+                                <Mail />
+                                <div>
+                                    <small>EMAIL US</small>
+                                    <p>{c.email || "Support email coming soon"}</p>
+                                    {c.businessEmail && <p>{c.businessEmail}</p>}
+                                </div>
+                            </div>
+                            <div className="contactitem">
+                                <MapPin />
+                                <div>
+                                    <small>OUR OFFICES</small>
+                                    <p>
+                                        {c.registeredOffice ||
+                                            "Registered office details to be announced"}
+                                    </p>
+                                    {c.operationalOffice && <p>{c.operationalOffice}</p>}
+                                    {c.officeHours && <p>{c.officeHours}</p>}
+                                </div>
+                            </div>
+                            <div className="actions">
+                                <button onClick={call} className="textbtn">
+                                    Call now ↗
+                                </button>
+                                <button onClick={wa} className="textbtn">
+                                    WhatsApp us ↗
+                                </button>
+                                <button
+                                    className="textbtn"
+                                    onClick={() =>
+                                        c.email
+                                            ? window.location.assign("mailto:" + c.email)
+                                            : setNotice("Support email will be announced soon.")
+                                    }
+                                >
+                                    Email us ↗
+                                </button>
+                                {c.mapUrl && (
+                                    <button
+                                        className="textbtn"
+                                        onClick={() => go(c.mapUrl, "Directions")}
+                                    >
+                                        Get directions ↗
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                        <form
+                            className="contactform"
+                            onSubmit={async (e) => {
+                                e.preventDefault();
+                                setSending(true);
+                                setStatus("");
+                                const form = e.currentTarget;
+                                try {
+                                    const formData = new FormData(form);
+                                    const b = await submitContact({
+                                        name: String(formData.get("name") || ""),
+                                        mobile: String(formData.get("mobile") || ""),
+                                        email: String(formData.get("email") || ""),
+                                        subject: String(formData.get("subject") || ""),
+                                        message: String(formData.get("message") || ""),
+                                        turnstileToken: String(
+                                            formData.get("turnstileToken") || "",
+                                        ),
+                                        website: String(formData.get("website") || ""),
+                                    });
+                                    if (b.ok) {
+                                        setStatus(
+                                            "Thank you. Your enquiry has been saved for the Kasturii Roadways team.",
+                                        );
+                                        form.reset();
+                                    } else
+                                        setStatus(
+                                            b.error ||
+                                            Object.values(b.errors || {})[0] ||
+                                            "Please check the form.",
+                                        );
+                                } catch {
+                                    setStatus("Could not send your message. Please try again.");
+                                }
+                                setSending(false);
+                            }}
+                        >
+                            <h3>Send us a message</h3>
+                            <div className="formrow">
+                                <label>
+                                    Your name
+                                    <input
+                                        name="name"
+                                        placeholder="Full name"
+                                        maxLength={100}
+                                        required
+                                    />
+                                </label>
+                                <label>
+                                    Mobile number
+                                    <input
+                                        name="mobile"
+                                        type="tel"
+                                        placeholder="Your mobile number"
+                                        pattern="[+0-9 ()\-]{7,20}"
+                                        required
+                                    />
+                                </label>
+                            </div>
+                            <label>
+                                Email address
+                                <input
+                                    name="email"
+                                    type="email"
+                                    placeholder="you@example.com"
+                                    required
+                                    maxLength={150}
+                                />
+                            </label>
+                            <label>
+                                Subject
+                                <select name="subject" required>
+                                    <option value="">How can we help?</option>
+                                    <option>Route enquiry</option>
+                                    <option>Booking assistance</option>
+                                    <option>Business enquiry</option>
+                                    <option>Other</option>
+                                </select>
+                            </label>
+                            <label>
+                                Message
+                                <textarea
+                                    name="message"
+                                    placeholder="Tell us a little about your journey…"
+                                    rows={4}
+                                    maxLength={4000}
+                                    required
+                                />
+                            </label>
+                            <input
+                                className="honeypot"
+                                name="website"
+                                tabIndex={-1}
+                                autoComplete="off"
+                                aria-hidden="true"
+                            />
+                            <small>
+                                We store your enquiry to respond to your request. Please don't
+                                include payment details.
+                            </small>
+                            <button className="btn" disabled={sending}>
+                                {sending ? "Sending…" : "Send Message"}{" "}
+                                <ArrowUpRight size={17} />
+                            </button>
+                            <p role="status">{status}</p>
+                        </form>
+                    </div>
+                </section>
+            </main>
+            <footer>
+                <div className="wrap footergrid">
+                    <div>
+                        <a className="brand" href="#home">
+                            <span className="brandmark">
+                                K<span>↗</span>
+                            </span>
+                            <span>
+                                KASTURII<small>ROADWAYS PRIVATE LIMITED</small>
+                            </span>
+                        </a>
+                        <p>Ride in Comfort, Travel in Pride.</p>
+                        <small>A new perspective on overnight travel.</small>
+                    </div>
+                    <div>
+                        <h4>EXPLORE</h4>
+                        {nav.slice(1).map(([n, h]) => (
+                            <a key={n} href={h}>
+                                {n}
+                            </a>
+                        ))}
+                        <a href="#amenities">Amenities</a>
+                    </div>
+                    <div>
+                        <h4>YOUR NEXT JOURNEY</h4>
+                        <button onClick={() => go(c.REDBUS_BOOKING_URL, "redBus")}>
+                            Book on redBus ↗
+                        </button>
+                        <button onClick={() => go(c.MAKEMYTRIP_BOOKING_URL, "MakeMyTrip")}>
+                            Book on MakeMyTrip ↗
+                        </button>
+                        <button onClick={wa}>Book on WhatsApp ↗</button>
+                        {["facebook", "instagram", "youtube"]
+                            .filter((k) => c[k])
+                            .map((k) => (
+                                <button key={k} onClick={() => go(c[k], k)}>
+                                    {k} ↗
+                                </button>
+                            ))}
+                    </div>
+                    <div>
+                        <h4>GOOD TO KNOW</h4>
+                        {[
+                            ["Privacy Policy", "privacy"],
+                            ["Terms & Conditions", "terms"],
+                            ["Cancellation & Refund", "cancellation"],
+                        ].map(([n, k]) => (
+                            <button
+                                key={k}
+                                onClick={() => setModal({ title: n, text: c[k] })}
+                            >
+                                {n}
+                            </button>
+                        ))}
+                        <a href="/admin">Staff access ↗</a>
+                    </div>
+                </div>
+                <div className="wrap copyright">
+                    <span>
+                        © {new Date().getFullYear()} Kasturii Roadways Private Limited. All
+                        rights reserved.
+                    </span>
+                    <span>MADE FOR THE JOURNEY.</span>
+                </div>
+            </footer>
+            <button
+                className="floatwa"
+                aria-label="Chat with us on WhatsApp"
+                onClick={wa}
+            >
+                <MessageCircle size={25} />
+            </button>
+            <div className="mobilebar">
+                <button onClick={call}>
+                    <Phone size={17} />
+                    Call
+                </button>
+                <button onClick={wa}>
+                    <MessageCircle size={17} />
+                    WhatsApp
+                </button>
+                <a href="#booking">
+                    <Ticket size={17} />
+                    Book Ticket
+                </a>
+            </div>
+            {notice && (
+                <div className="toast" role="status">
+                    {notice}
+                    <button onClick={() => setNotice("")} aria-label="Dismiss">
+                        <X size={18} />
+                    </button>
+                </div>
+            )}
+            {modal && (
+                <div className="modalback" onClick={() => setModal(null)}>
+                    <dialog
+                        open
+                        aria-modal="true"
+                        aria-labelledby="dialogtitle"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className="close"
+                            autoFocus
+                            onClick={() => setModal(null)}
+                            aria-label="Close dialog"
+                        >
+                            <X />
+                        </button>
+                        <h2 id="dialogtitle">{modal.title}</h2>
+                        {modal.image && <img src={modal.image} alt={modal.title} />}
+                        <p>{modal.text}</p>
+                        {modal.book && (
+                            <a className="btn" href="#booking" onClick={() => setModal(null)}>
+                                See booking options <ArrowRight size={16} />
+                            </a>
+                        )}
+                    </dialog>
+                </div>
+            )}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Organization",
+                        name: "Kasturii Roadways Private Limited",
+                        url: "https://kasturii-roadways-premium.rare-snow-5006.chatgpt.site",
+                        slogan: "Ride in Comfort, Travel in Pride",
+                    }),
+                }}
+            />
+        </>
+    );
+}
