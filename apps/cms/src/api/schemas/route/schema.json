@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "routes",
+  "info": { "singularName": "route", "pluralName": "routes", "displayName": "Route" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true, "maxLength": 160 },
+    "slug": { "type": "uid", "targetField": "title", "required": true },
+    "origin": { "type": "relation", "relation": "manyToOne", "target": "api::city.city", "inversedBy": "originRoutes" },
+    "destination": { "type": "relation", "relation": "manyToOne", "target": "api::city.city", "inversedBy": "destinationRoutes" },
+    "description": { "type": "richtext" },
+    "popular": { "type": "boolean", "default": false },
+    "isSample": { "type": "boolean", "default": false },
+    "schedules": { "type": "relation", "relation": "oneToMany", "target": "api::schedule.schedule", "mappedBy": "route" },
+    "testimonials": { "type": "relation", "relation": "oneToMany", "target": "api::testimonial.testimonial", "mappedBy": "route" },
+    "seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
+  }
+}

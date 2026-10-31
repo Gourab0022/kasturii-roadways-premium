@@ -1,0 +1,9 @@
+{
+  "collectionName": "components_shared_addresses",
+  "info": { "displayName": "Address" },
+  "attributes": {
+    "label": { "type": "string", "maxLength": 80 },
+    "address": { "type": "text" },
+    "mapUrl": { "type": "string" }
+  }
+}

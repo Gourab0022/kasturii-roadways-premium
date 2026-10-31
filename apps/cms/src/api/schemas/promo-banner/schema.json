@@ -1,0 +1,15 @@
+{
+  "kind": "collectionType",
+  "collectionName": "promo_banners",
+  "info": { "singularName": "promo-banner", "pluralName": "promo-banners", "displayName": "Promo banner" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true, "maxLength": 160 },
+    "link": { "type": "string" },
+    "imageDesktop": { "type": "media", "multiple": false, "required": true, "allowedTypes": ["images"] },
+    "imageMobile": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "sortOrder": { "type": "integer", "default": 0, "min": 0 },
+    "startsAt": { "type": "datetime" },
+    "endsAt": { "type": "datetime" }
+  }
+}

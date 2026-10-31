@@ -1,0 +1,13 @@
+{
+  "kind": "collectionType",
+  "collectionName": "stops",
+  "info": { "singularName": "stop", "pluralName": "stops", "displayName": "Stop" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "name": { "type": "string", "required": true, "maxLength": 120 },
+    "address": { "type": "text", "required": true },
+    "city": { "type": "relation", "relation": "manyToOne", "target": "api::city.city", "inversedBy": "stops" },
+    "latitude": { "type": "decimal", "min": -90, "max": 90 },
+    "longitude": { "type": "decimal", "min": -180, "max": 180 }
+  }
+}

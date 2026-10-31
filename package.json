@@ -10,7 +10,7 @@
     "build": "pnpm --dir apps/web build",
     "start": "pnpm --dir apps/web start",
     "lint": "pnpm --dir apps/web lint",
-    "db:generate": "pnpm --dir apps/cms db:generate",
+    "cms:build": "pnpm --dir apps/cms build",
     "typecheck": "pnpm --dir apps/web typecheck && pnpm --dir apps/cms typecheck"
   },
   "dependencies": {

@@ -1,0 +1,12 @@
+{
+  "kind": "collectionType",
+  "collectionName": "safety_features",
+  "info": { "singularName": "safety-feature", "pluralName": "safety-features", "displayName": "Safety feature" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true, "maxLength": 120 },
+    "description": { "type": "text", "required": true, "maxLength": 500 },
+    "icon": { "type": "string", "maxLength": 80 },
+    "sortOrder": { "type": "integer", "default": 0, "min": 0 }
+  }
+}

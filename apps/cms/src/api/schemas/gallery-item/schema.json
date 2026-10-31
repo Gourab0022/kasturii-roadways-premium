@@ -1,0 +1,12 @@
+{
+  "kind": "collectionType",
+  "collectionName": "gallery_items",
+  "info": { "singularName": "gallery-item", "pluralName": "gallery-items", "displayName": "Gallery item" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true, "maxLength": 120 },
+    "image": { "type": "media", "multiple": false, "required": true, "allowedTypes": ["images"] },
+    "caption": { "type": "string", "maxLength": 240 },
+    "coachType": { "type": "relation", "relation": "manyToOne", "target": "api::coach-type.coach-type", "inversedBy": "galleryItems" }
+  }
+}

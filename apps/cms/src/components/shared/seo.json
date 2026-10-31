@@ -1,0 +1,9 @@
+{
+  "collectionName": "components_shared_seos",
+  "info": { "displayName": "SEO" },
+  "attributes": {
+    "title": { "type": "string", "maxLength": 60 },
+    "description": { "type": "text", "maxLength": 160 },
+    "ogImage": { "type": "media", "multiple": false, "allowedTypes": ["images"] }
+  }
+}

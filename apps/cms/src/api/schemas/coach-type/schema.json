@@ -1,0 +1,15 @@
+{
+  "kind": "collectionType",
+  "collectionName": "coach_types",
+  "info": { "singularName": "coach-type", "pluralName": "coach-types", "displayName": "Coach type" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "name": { "type": "string", "required": true, "unique": true, "maxLength": 100 },
+    "slug": { "type": "uid", "targetField": "name", "required": true },
+    "description": { "type": "text" },
+    "image": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "amenities": { "type": "relation", "relation": "manyToMany", "target": "api::amenity.amenity", "inversedBy": "coachTypes" },
+    "galleryItems": { "type": "relation", "relation": "oneToMany", "target": "api::gallery-item.gallery-item", "mappedBy": "coachType" },
+    "schedules": { "type": "relation", "relation": "oneToMany", "target": "api::schedule.schedule", "mappedBy": "coachType" }
+  }
+}

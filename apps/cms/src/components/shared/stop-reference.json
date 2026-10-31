@@ -1,0 +1,9 @@
+{
+  "collectionName": "components_shared_stop_references",
+  "info": { "displayName": "Stop reference" },
+  "attributes": {
+    "stop": { "type": "relation", "relation": "oneToOne", "target": "api::stop.stop" },
+    "time": { "type": "time" },
+    "note": { "type": "string", "maxLength": 160 }
+  }
+}

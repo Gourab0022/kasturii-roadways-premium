@@ -1,0 +1,9 @@
+{
+  "collectionName": "components_shared_social_links",
+  "info": { "displayName": "Social link" },
+  "attributes": {
+    "platform": { "type": "enumeration", "enum": ["facebook", "instagram", "youtube", "x", "linkedin"] },
+    "url": { "type": "string" },
+    "label": { "type": "string", "maxLength": 80 }
+  }
+}

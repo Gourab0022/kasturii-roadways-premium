@@ -1,0 +1,22 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_settings",
+  "info": { "singularName": "site-setting", "pluralName": "site-settings", "displayName": "Site setting" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "header": { "type": "richtext" },
+    "footer": { "type": "richtext" },
+    "contact": { "type": "component", "repeatable": false, "component": "shared.address" },
+    "WhatsApp": { "type": "string", "default": "" },
+    "redBus": { "type": "string", "default": "" },
+    "MMT": { "type": "string", "default": "" },
+    "logo": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "registeredOffice": { "type": "component", "repeatable": false, "component": "shared.address" },
+    "operationalOffice": { "type": "component", "repeatable": false, "component": "shared.address" },
+    "socialLinks": { "type": "component", "repeatable": true, "component": "shared.social-link" },
+    "defaultSeo": { "type": "component", "repeatable": false, "component": "shared.seo" },
+    "businessEmail": { "type": "email" },
+    "phone": { "type": "string" },
+    "officeHours": { "type": "string" }
+  }
+}

@@ -1,16 +1,35 @@
 {
   "name": "@kasturii/cms",
   "private": true,
+  "version": "0.1.0",
+  "description": "Kasturii Roadways Strapi CMS",
   "type": "module",
   "scripts": {
+    "build": "strapi build",
+    "develop": "strapi develop",
+    "start": "strapi start",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "db:generate": "drizzle-kit generate --config drizzle.config.ts"
+    "seed": "tsx scripts/seed.ts"
+  },
+  "dependencies": {
+    "@strapi/strapi": "^5.31.0",
+    "pg": "^8.16.0",
+    "qs": "^6.14.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.6",
+    "styled-components": "^6.6.0",
+    "zod": "^4.1.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20260515.1",
-    "drizzle-kit": "0.31.10",
-    "drizzle-orm": "0.45.2",
-    "typescript": "5.9.3",
-    "wrangler": "4.92.0"
+    "@strapi/types": "^5.31.0",
+    "@types/node": "^22.19.0",
+    "@types/qs": "^6.14.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=20.0.0 <=24.x.x",
+    "npm": ">=6.0.0"
   }
 }

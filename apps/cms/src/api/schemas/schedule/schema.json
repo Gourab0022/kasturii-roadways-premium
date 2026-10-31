@@ -1,0 +1,19 @@
+{
+  "kind": "collectionType",
+  "collectionName": "schedules",
+  "info": { "singularName": "schedule", "pluralName": "schedules", "displayName": "Schedule" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "name": { "type": "string", "required": true, "maxLength": 120 },
+    "route": { "type": "relation", "relation": "manyToOne", "target": "api::route.route", "inversedBy": "schedules" },
+    "coachType": { "type": "relation", "relation": "manyToOne", "target": "api::coach-type.coach-type", "inversedBy": "schedules" },
+    "departureTime": { "type": "time", "required": true },
+    "arrivalTime": { "type": "time", "required": true },
+    "arrivalDayOffset": { "type": "integer", "default": 0, "min": 0, "max": 7 },
+    "durationMinutes": { "type": "integer", "min": 1 },
+    "boardingPoints": { "type": "component", "repeatable": true, "component": "shared.stop-reference" },
+    "droppingPoints": { "type": "component", "repeatable": true, "component": "shared.stop-reference" },
+    "amenities": { "type": "relation", "relation": "manyToMany", "target": "api::amenity.amenity" },
+    "isSample": { "type": "boolean", "default": false }
+  }
+}
