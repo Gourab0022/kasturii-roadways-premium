@@ -28,7 +28,9 @@ pnpm --dir apps/cms seed
 
 ## CMS contract
 
-The committed schemas in [`apps/cms/src/api/`](C:/Users/nares/Desktop/Web%20Work/Kasturi%20Roadways/kasturii-roadways-premium/apps/cms/src/api/) provide the REST resources used by the site: site setting, cities, routes, coach types, gallery items, amenities, safety features, promo banners, testimonials, FAQs, and legal pages. Draft & Publish is enabled for editorial content; the frontend token is granted read-only permissions and reads published entries only.
+The centralized schema source is [`apps/cms/src/schemas/`](C:/Users/nares/Desktop/Web%20Work/Kasturii%20Roadways/kasturii-roadways-premium/apps/cms/src/schemas/). It contains one flat JSON file per content type, such as `city.json` and `route.json`. Strapi’s native discovery convention remains `src/api/<type>/content-types/<type>/schema.json`; a schema-loader/build step is required before Strapi can load the centralized files.
+
+The flat schema files provide the REST resources used by the site: site setting, cities, routes, coach types, gallery items, amenities, safety features, promo banners, testimonials, FAQs, and legal pages. Draft & Publish is enabled for editorial content; the frontend token is granted read-only permissions and reads published entries only.
 
 `POST /api/contact` validates the documented contact payload, rejects the honeypot, verifies Cloudflare Turnstile, rate-limits by IP, stores a private contact submission, and optionally sends a Resend notification.
 

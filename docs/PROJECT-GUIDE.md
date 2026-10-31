@@ -66,9 +66,11 @@ kasturii-roadways/
 │       │   ├── api.ts                       # REST limits
 │       │   ├── middlewares.ts               # CORS and core middleware
 │       │   └── plugins.ts                   # upload limits and breakpoints
-│       ├── src/api/                         # central schemas and contact route
-│       │   └── schemas/<type>/schema.json   # all content schemas
-│       │   └── schemas/<type>/schema.json   # all content schemas
+│       ├── src/api/                         # custom contact route
+│       ├── src/schemas/                     # centralized flat content schemas
+│       │   ├── amenity.json
+│       │   ├── city.json
+│       │   └── ...                           # one flat file per content type
 │       ├── src/components/shared/           # reusable components
 │       ├── src/index.ts                    # schedule hook and revalidation
 │       ├── scripts/seed.ts                  # idempotent demo seed
@@ -82,6 +84,8 @@ kasturii-roadways/
 ├── pnpm-lock.yaml
 └── pnpm-workspace.yaml
 ```
+
+The centralized schema source contains one flat file per content type, for example `src/schemas/city.json` and `src/schemas/route.json`. Strapi’s native discovery convention remains `src/api/<type>/content-types/<type>/schema.json`; a schema-loader/build step is required before Strapi can load the centralized files at runtime.
 
 ## 3. Requirements and installation
 
